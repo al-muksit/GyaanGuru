@@ -116,4 +116,7 @@ dependencies {
 
     implementation ("com.google.accompanist:accompanist-systemuicontroller:0.28.0")
 
+//    implementation("com.github.barteksc:android-pdf-viewer:2.8.2")
+//    implementation("androidx.pdf:pdf-viewer-fragment:1.0.0-alpha05")
+
 }

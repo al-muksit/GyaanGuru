@@ -348,13 +348,13 @@
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:id="@+id/prothomAlo"
+                            android:id="@+id/bd_pratidin"
                             android:layout_width="160sp"
                             android:layout_height="50sp"
                             android:layout_margin="10sp"
                             android:background="@drawable/white_bg"
                             android:padding="5sp"
-                            android:src="@drawable/prothom_alo"></ImageView>
+                            android:src="@drawable/bd_pratidin"></ImageView>
 
                         <ImageView
                             android:id="@+id/karatoa"
@@ -366,28 +366,40 @@
                             android:src="@drawable/daily_karatoa"></ImageView>
 
                         <ImageView
+                            android:id="@+id/jugantor"
                             android:layout_width="160sp"
                             android:layout_height="50sp"
                             android:layout_margin="10sp"
-                            android:background="@color/red"></ImageView>
+                            android:background="@drawable/white_bg"
+                            android:padding="3sp"
+                            android:src="@drawable/jugantor"></ImageView>
 
                         <ImageView
+                            android:id="@+id/kaler_kantho"
                             android:layout_width="160sp"
                             android:layout_height="50sp"
                             android:layout_margin="10sp"
-                            android:background="@color/purple"></ImageView>
+                            android:background="@drawable/white_bg"
+                            android:padding="3sp"
+                            android:src="@drawable/kaler_kantho"></ImageView>
 
                         <ImageView
+                            android:id="@+id/inqilab"
                             android:layout_width="160sp"
                             android:layout_height="50sp"
                             android:layout_margin="10sp"
-                            android:background="@color/green"></ImageView>
+                            android:background="@drawable/white_bg"
+                            android:padding="3sp"
+                            android:src="@drawable/inqilab"></ImageView>
 
                         <ImageView
+                            android:id="@+id/jamuna_tv"
                             android:layout_width="160sp"
                             android:layout_height="50sp"
                             android:layout_margin="10sp"
-                            android:background="@color/yellow"></ImageView>
+                            android:background="@drawable/white_bg"
+                            android:padding="3sp"
+                            android:src="@drawable/jamuna_tv"></ImageView>
 
                     </LinearLayout>
 
@@ -419,11 +431,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5sp"
-                    android:layout_marginBottom="5sp"
+                    android:paddingBottom="2sp"
+                    android:layout_marginBottom="10sp"
                     android:orientation="horizontal">
 
                     <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/current_month"
+                        android:id="@+id/jan_2025"
                         style="@android:style/Widget.Button"
                         android:layout_width="match_parent"
                         android:layout_height="50sp"
@@ -431,7 +444,7 @@
                         android:drawableStart="@drawable/calendar"
                         android:drawablePadding="10dp"
                         android:padding="10sp"
-                        android:text="July 2024"
+                        android:text="January 2025"
                         android:textAlignment="center"
                         android:layout_marginStart="10sp"
                         android:layout_marginEnd="10sp"
@@ -439,7 +452,7 @@
                         android:textStyle="bold" />
 
                     <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/previous_month"
+                        android:id="@+id/dec_2024"
                         style="@android:style/Widget.Button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -447,7 +460,7 @@
                         android:drawableStart="@drawable/calendar"
                         android:drawablePadding="10dp"
                         android:padding="10sp"
-                        android:text="June 2024"
+                        android:text="December 2024"
                         android:textAlignment="center"
                         android:layout_marginStart="10sp"
                         android:layout_marginEnd="10sp"
@@ -455,7 +468,7 @@
                         android:textStyle="bold" />
 
                     <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/more_previous_month"
+                        android:id="@+id/nov_2024"
                         style="@android:style/Widget.Button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -463,7 +476,7 @@
                         android:drawableStart="@drawable/calendar"
                         android:drawablePadding="10dp"
                         android:padding="10sp"
-                        android:text="May 2024"
+                        android:text="November 2024"
                         android:textAlignment="center"
                         android:layout_marginStart="10sp"
                         android:layout_marginEnd="10sp"
@@ -471,7 +484,7 @@
                         android:textStyle="bold" />
 
                     <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/most_previous_month"
+                        android:id="@+id/oct_2024"
                         style="@android:style/Widget.Button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -479,7 +492,23 @@
                         android:drawableStart="@drawable/calendar"
                         android:drawablePadding="10dp"
                         android:padding="10sp"
-                        android:text="April 2024"
+                        android:text="October 2024"
+                        android:textAlignment="center"
+                        android:layout_marginStart="10sp"
+                        android:layout_marginEnd="10sp"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/sep_2024"
+                        style="@android:style/Widget.Button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/design_profile_bg"
+                        android:drawableStart="@drawable/calendar"
+                        android:drawablePadding="10dp"
+                        android:padding="10sp"
+                        android:text="September 2024"
                         android:textAlignment="center"
                         android:layout_marginStart="10sp"
                         android:layout_marginEnd="10sp"
