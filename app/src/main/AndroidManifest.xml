@@ -18,6 +18,9 @@
         android:theme="@style/Theme.GyaanGuru"
         tools:targetApi="31">
         <activity
+            android:name=".updates.DailyUpdatesActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.CurrentAffairsActivity"
             android:exported="false" />
         <activity
