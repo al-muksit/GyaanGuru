@@ -7,6 +7,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.gyaanguru.Adapter.SliderAdapter;
 import com.gyaanguru.Models.SliderData;
 import com.gyaanguru.R;
 
+import com.gyaanguru.updates.DailyUpdatesActivity;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 
@@ -32,6 +34,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     private ImageView bd_pratidin, karatoa, jugantor, kaler_kantho, inqilab, jamuna_tv;
     private Button dec_2024, jan_2025;
+
+    CardView cardview_daily, cardview_career, cardview_job, cardview_science, cardview_others;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -59,6 +63,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         inqilab = (ImageView) view.findViewById(R.id.inqilab);
         jamuna_tv = (ImageView) view.findViewById(R.id.jamuna_tv);
 
+        cardview_daily = (CardView) view.findViewById(R.id.cardview_daily);
+        cardview_career = (CardView) view.findViewById(R.id.cardview_career);
+        cardview_job = (CardView) view.findViewById(R.id.cardview_job);
+        cardview_science = (CardView) view.findViewById(R.id.cardview_Science);
+        cardview_others = (CardView) view.findViewById(R.id.cardview_others);
+
         bd_pratidin.setOnClickListener(this);
         karatoa.setOnClickListener(this);
         jugantor.setOnClickListener(this);
@@ -70,6 +80,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         jan_2025 = (Button) view.findViewById(R.id.jan_2025);
         dec_2024.setOnClickListener(this);
         jan_2025.setOnClickListener(this);
+
+        cardview_daily.setOnClickListener(this);
+        cardview_career.setOnClickListener(this);
+        cardview_job.setOnClickListener(this);
+        cardview_science.setOnClickListener(this);
+        cardview_others.setOnClickListener(this);
     }
 
     private void loadImages() {
@@ -90,6 +106,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
+//Updates
+        if (view.getId() == R.id.cardview_daily) {
+            startActivity(new Intent(getActivity(), DailyUpdatesActivity.class));
+        }
+
+
+
 //NewsPapers
         Intent newsIntent = new Intent(getActivity(), NewsActivity.class);
         if (view.getId() == R.id.bd_pratidin) {

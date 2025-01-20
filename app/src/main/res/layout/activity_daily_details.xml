@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context=".updates.DailyDetailsActivity">
+
+    <ImageView
+        android:id="@+id/dailyUpdatesImage"
+        android:layout_width="match_parent"
+        android:layout_height="240sp"
+        android:src="@drawable/slider_latest"
+        android:layout_marginBottom="10sp"
+        android:scaleType="fitXY"></ImageView>
+
+    <TextView
+        android:id="@+id/dailyUpdatesTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dailyUpdatesImage"
+        android:textSize="18sp"
+        android:paddingLeft="4sp"
+        android:paddingRight="4sp"
+        android:layout_marginLeft="5sp"
+        android:layout_marginRight="5sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:text="‘অযথা ঘোরাঘুরি’ করা গাড়ি তল্লাশি করতে হবে: ডিএমপি কমিশনার"
+        android:ellipsize="end"
+        android:justificationMode="inter_word"></TextView>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5sp"
+        android:layout_marginRight="5sp"
+        android:layout_below="@id/dailyUpdatesTitle">
+
+        <TextView
+            android:id="@+id/dailyUpdatesDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:paddingLeft="4sp"
+            android:paddingRight="4sp"
+            android:textColor="@color/dark_grey"
+            android:text="এলাকার নিরাপত্তা বাড়াতে ঢাকার ওসিদের ‘অযথা ঘোরাঘুরি’ করা গাড়িতে তল্লাশি চালাতে বলেছেন ঢাকা মহানগর পুলিশের (ডিএমপি) কমিশনার শেখ মো. সাজ্জাত আলী।"
+            android:ellipsize="end"
+            android:justificationMode="inter_word"></TextView>
+
+    </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/faButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="32sp"
+        android:layout_marginBottom="32sp"
+        android:backgroundTint="@color/warningColor"
+        android:src="@drawable/baseline_keyboard_voice_24"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"></com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+</RelativeLayout>
