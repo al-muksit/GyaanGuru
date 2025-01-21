@@ -68,7 +68,7 @@ class ChatViewModel :ViewModel() {
                 val chat = generativeModel.startChat(history = messageList.map { content(it.role) { text(it.message) } }.toList())
                 messageList.add(MessageModel(question, "user"))
                 // Handle "who are you" question
-                if (question.lowercase().contains("who are you")) {
+                if (question.lowercase().contains("who are you") || question.lowercase().startsWith("who r u")) {
                     val genericResponse = "I am a Chat AI assistant, here to help you with your questions and requests."
                     messageList.add(MessageModel(genericResponse, "model"))
                 } else {
