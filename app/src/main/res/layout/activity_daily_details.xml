@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white"
-    tools:context=".updates.DailyDetailsActivity">
+    tools:context=".Updates.DailyDetailsActivity">
 
     <ImageView
         android:id="@+id/dailyUpdatesImage"

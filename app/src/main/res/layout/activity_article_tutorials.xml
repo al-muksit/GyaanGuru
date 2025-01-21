@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="30sp"
+    android:background="@color/light_grey"
+    tools:context=".Tutorials.ArticleTutorialsActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10sp"
+        android:weightSum="2"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/javatpoint"
+            android:layout_width="match_parent"
+            android:layout_height="80sp"
+            android:src="@drawable/javatpoint"
+            android:background="@drawable/white_bg"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="15sp"
+            android:layout_weight="1"
+            android:padding="4sp"></ImageView>
+
+        <ImageView
+            android:id="@+id/geeksforgeeks"
+            android:layout_width="match_parent"
+            android:layout_height="80sp"
+            android:layout_weight="1"
+            android:background="@drawable/white_bg"
+            android:layout_marginLeft="15sp"
+            android:layout_marginRight="10sp"
+            android:src="@drawable/geeksforgeeks"
+            android:padding="4sp"></ImageView>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30sp"
+        android:weightSum="2"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/tutorialspoint"
+            android:layout_width="match_parent"
+            android:layout_height="80sp"
+            android:src="@drawable/tutorials_point"
+            android:background="@drawable/white_bg"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="15sp"
+            android:layout_weight="1"
+            android:padding="4sp"></ImageView>
+
+        <ImageView
+            android:id="@+id/w3school"
+            android:layout_width="match_parent"
+            android:layout_height="80sp"
+            android:layout_weight="1"
+            android:background="@drawable/white_bg"
+            android:layout_marginLeft="15sp"
+            android:layout_marginRight="10sp"
+            android:src="@drawable/w3school"
+            android:padding="10sp"></ImageView>
+
+    </LinearLayout>
+
+
+</LinearLayout>
