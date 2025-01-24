@@ -1,67 +1,63 @@
-package com.gyaanguru.Tutorials;
+package com.gyaanguru.Tutorials
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageView;
+import android.content.Intent
+import android.os.Bundle
+import android.view.View
+import android.widget.ImageView
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import com.gyaanguru.Activities.NewsActivity
+import com.gyaanguru.R
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+class ArticleTutorialsActivity : AppCompatActivity(), View.OnClickListener {
+    var javatpoint: ImageView? = null
+    var geeksforgeeks: ImageView? = null
+    var tutorialspoint: ImageView? = null
+    var w3school: ImageView? = null
 
-import com.gyaanguru.Activities.NewsActivity;
-import com.gyaanguru.R;
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        this.enableEdgeToEdge()
+        setContentView(R.layout.activity_article_tutorials)
+        window.statusBarColor = resources.getColor(R.color.dark_green)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v: View, insets: WindowInsetsCompat ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
-public class ArticleTutorialsActivity extends AppCompatActivity implements View.OnClickListener {
+        javatpoint = findViewById<View>(R.id.javatpoint) as ImageView
+        geeksforgeeks = findViewById<View>(R.id.geeksforgeeks) as ImageView
+        tutorialspoint = findViewById<View>(R.id.tutorialspoint) as ImageView
+        w3school = findViewById<View>(R.id.w3school) as ImageView
 
-    ImageView javatpoint, geeksforgeeks, tutorialspoint, w3school;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_article_tutorials);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
-        javatpoint = (ImageView) findViewById(R.id.javatpoint);
-        geeksforgeeks = (ImageView) findViewById(R.id.geeksforgeeks);
-        tutorialspoint = (ImageView) findViewById(R.id.tutorialspoint);
-        w3school = (ImageView) findViewById(R.id.w3school);
-
-        javatpoint.setOnClickListener(this);
-        geeksforgeeks.setOnClickListener(this);
-        tutorialspoint.setOnClickListener(this);
-        w3school.setOnClickListener(this);
-
+        javatpoint!!.setOnClickListener(this)
+        geeksforgeeks!!.setOnClickListener(this)
+        tutorialspoint!!.setOnClickListener(this)
+        w3school!!.setOnClickListener(this)
     }
 
-    @Override
-    public void onClick(View view) {
-        Intent articleTutorialsIntent = new Intent(this, NewsActivity.class);
-        if (view.getId() == R.id.javatpoint) {
-            articleTutorialsIntent.putExtra("NewsURL", "https://www.javatpoint.com/");
+    override fun onClick(view: View) {
+        val articleTutorialsIntent = Intent(this, NewsActivity::class.java)
+        if (view.id == R.id.javatpoint) {
+            articleTutorialsIntent.putExtra("NewsURL", "https://www.javatpoint.com/")
+        } else if (view.id == R.id.geeksforgeeks) {
+            articleTutorialsIntent.putExtra("NewsURL", "https://www.geeksforgeeks.org/")
+        } else if (view.id == R.id.tutorialspoint) {
+            articleTutorialsIntent.putExtra("NewsURL", "https://www.tutorialspoint.com/")
+        } else if (view.id == R.id.w3school) {
+            articleTutorialsIntent.putExtra("NewsURL", "https://www.w3schools.com/")
         }
-        else if (view.getId() == R.id.geeksforgeeks) {
-            articleTutorialsIntent.putExtra("NewsURL", "https://www.geeksforgeeks.org/");
-        }
-        else if (view.getId() == R.id.tutorialspoint) {
-            articleTutorialsIntent.putExtra("NewsURL", "https://www.tutorialspoint.com/");
-        }
-        else if (view.getId() == R.id.w3school) {
-            articleTutorialsIntent.putExtra("NewsURL", "https://www.w3schools.com/");
-        }
-        startActivity(articleTutorialsIntent);
-
+        startActivity(articleTutorialsIntent)
     }
 
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-        super.onPointerCaptureChanged(hasCapture);
+    fun back(view: View?) {
+        finish()
+    }
+
+    override fun onPointerCaptureChanged(hasCapture: Boolean) {
+        super.onPointerCaptureChanged(hasCapture)
     }
 }

@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -39,6 +40,7 @@ public class DailyUpdatesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_daily_updates);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dark_blue));
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -109,7 +111,9 @@ public class DailyUpdatesActivity extends AppCompatActivity {
         }
     }
 
-
+    public void back(View view) {
+        finish();
+    }
 
     private void dailyUpdatesTable() {
         hashMap = new HashMap<>();
