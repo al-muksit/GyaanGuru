@@ -1,5 +1,3 @@
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -100,8 +98,9 @@ dependencies {
     implementation("com.agrawalsuneet.androidlibs:dotsloader:1.4")
     implementation("androidx.gridlayout:gridlayout:1.0.0")
 
-    implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
-    implementation("androidx.navigation:navigation-ui-ktx:2.3.5")
+    // Navigation Component
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
 
     implementation(platform("com.google.firebase:firebase-bom:33.1.1"))
     implementation("com.google.firebase:firebase-analytics")
@@ -116,7 +115,9 @@ dependencies {
 
     implementation ("com.google.accompanist:accompanist-systemuicontroller:0.28.0")
 
-//    implementation("com.github.barteksc:android-pdf-viewer:2.8.2")
-//    implementation("androidx.pdf:pdf-viewer-fragment:1.0.0-alpha05")
+    implementation("androidx.compose.ui:ui:1.7.7")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.7.7")
+    debugImplementation("androidx.compose.ui:ui-tooling:1.7.7")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.7.7")
 
 }

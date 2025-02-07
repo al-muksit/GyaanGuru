@@ -93,5 +93,8 @@
 
     <string name="privacy_contact_title">Contact Us</string>
     <string name="privacy_contact">If you have any questions about this Privacy Policy, please contact us at <a href="mailto:smash.tech@gmail.com">smash.tech@gmail.com</a>.</string>
+    <string name="title_activity_test">TestActivity</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

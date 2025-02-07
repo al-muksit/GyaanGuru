@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.gyaanguru.Activities.CurrentAffairsActivity
 import com.gyaanguru.Activities.NewsActivity
 import com.gyaanguru.Adapter.SliderAdapter
@@ -72,93 +73,97 @@ class HomeFragment : Fragment(), View.OnClickListener {
         cardview_science = view.findViewById<View>(R.id.cardview_Science) as CardView
         cardview_others = view.findViewById<View>(R.id.cardview_others) as CardView
 
-        bd_pratidin!!.setOnClickListener(this)
-        karatoa!!.setOnClickListener(this)
-        jugantor!!.setOnClickListener(this)
-        kaler_kantho!!.setOnClickListener(this)
-        inqilab!!.setOnClickListener(this)
-        jamuna_tv!!.setOnClickListener(this)
+        bd_pratidin?.setOnClickListener(this)
+        karatoa?.setOnClickListener(this)
+        jugantor?.setOnClickListener(this)
+        kaler_kantho?.setOnClickListener(this)
+        inqilab?.setOnClickListener(this)
+        jamuna_tv?.setOnClickListener(this)
 
         dec_2024 = view.findViewById<View>(R.id.dec_2024) as Button
         jan_2025 = view.findViewById<View>(R.id.jan_2025) as Button
 
         article_tutorials = view.findViewById<View>(R.id.article_tutorials) as Button
 
-        dec_2024!!.setOnClickListener(this)
-        jan_2025!!.setOnClickListener(this)
+        dec_2024?.setOnClickListener(this)
+        jan_2025?.setOnClickListener(this)
 
-        article_tutorials!!.setOnClickListener(this)
+        article_tutorials?.setOnClickListener(this)
 
-        cardview_daily!!.setOnClickListener(this)
-        cardview_salat_time!!.setOnClickListener(this)
+        cardview_daily?.setOnClickListener(this)
+        cardview_salat_time?.setOnClickListener(this)
         //   cardview_career.setOnClickListener(this);
-        cardview_job!!.setOnClickListener(this)
+        cardview_job?.setOnClickListener(this)
         //   cardview_science.setOnClickListener(this);
         //   cardview_others.setOnClickListener(this);
     }
 
     private fun loadImages() {
-        sliderDataArrayList!!.add(SliderData(R.drawable.journalist_holding_newspaper))
-        sliderDataArrayList!!.add(SliderData(R.drawable.slider_job))
-        sliderDataArrayList!!.add(SliderData(R.drawable.slider_quiz))
-        sliderDataArrayList!!.add(SliderData(R.drawable.slider_latest))
-        sliderDataArrayList!!.add(SliderData(R.drawable.slider_tutorials))
+        sliderDataArrayList?.add(SliderData(R.drawable.journalist_holding_newspaper))
+        sliderDataArrayList?.add(SliderData(R.drawable.slider_job))
+        sliderDataArrayList?.add(SliderData(R.drawable.slider_quiz))
+        sliderDataArrayList?.add(SliderData(R.drawable.slider_latest))
+        sliderDataArrayList?.add(SliderData(R.drawable.slider_tutorials))
 
         adapter = SliderAdapter(context, sliderDataArrayList)
-        sliderView!!.setSliderAdapter(adapter!!)
-        sliderView!!.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION)
-        sliderView!!.autoCycleDirection = SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH
-        sliderView!!.scrollTimeInSec = 3
-        sliderView!!.isAutoCycle = true
-        sliderView!!.startAutoCycle()
+        sliderView?.setSliderAdapter(adapter!!)
+        sliderView?.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION)
+        sliderView?.autoCycleDirection = SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH
+        sliderView?.scrollTimeInSec = 3
+        sliderView?.isAutoCycle = true
+        sliderView?.startAutoCycle()
     }
 
     override fun onClick(view: View) {
-//Updates
-        if (view.id == R.id.cardview_daily) {
-            startActivity(Intent(activity, DailyUpdatesActivity::class.java))
-        } else if (view.id == R.id.cardview_job) {
-            showOptionsDialog()
-        } else if (view.id == R.id.article_tutorials) {
-            startActivity(Intent(activity, ArticleTutorialsActivity::class.java))
+        when (view.id) {
+            R.id.cardview_daily -> {   //Updates
+                startActivity(Intent(activity, DailyUpdatesActivity::class.java))
+            }
+            R.id.cardview_salat_time -> {
+                startNewsActivity("https://raskin.top/")
+            }
+            R.id.cardview_job -> {
+                showOptionsDialog()
+            }
+            R.id.article_tutorials -> {   //Tutorials
+                startActivity(Intent(activity, ArticleTutorialsActivity::class.java))
+            }
+            R.id.bd_pratidin -> {   //NewsPapers
+                startNewsActivity("https://www.bd-pratidin.com/")
+            }
+            R.id.karatoa -> {
+                startNewsActivity("https://www.dailykaratoa.com/")
+            }
+            R.id.jugantor -> {
+                startNewsActivity("https://www.jugantor.com/")
+            }
+            R.id.kaler_kantho -> {
+                startNewsActivity("https://www.kalerkantho.com/")
+            }
+            R.id.inqilab -> {
+                startNewsActivity("https://dailyinqilab.com/")
+            }
+            R.id.jamuna_tv -> {
+                startNewsActivity("https://jamuna.tv/")
+            }
+            R.id.jan_2025 -> {  ////Current Affairs
+                startCurrentAffairsActivity("https://drive.google.com/file/d/1Y3nohuH9wgTm22BA3cODHh31usofKv6N/view?usp=sharing")
+            }
+            R.id.dec_2024 -> {
+                startCurrentAffairsActivity("https://drive.google.com/file/d/1NfogCQQ_cSmYlnz7iJG4hEgQqXELokYc/view?usp=sharing")
+            }
         }
+    }
 
-        //NewsPapers
+    private fun startNewsActivity(url: String) {
         val newsIntent = Intent(activity, NewsActivity::class.java)
-        if (view.id == R.id.bd_pratidin) {
-            newsIntent.putExtra("NewsURL", "https://www.bd-pratidin.com/")
-        } else if (view.id == R.id.karatoa) {
-            newsIntent.putExtra("NewsURL", "https://www.dailykaratoa.com/")
-        } else if (view.id == R.id.jugantor) {
-            newsIntent.putExtra("NewsURL", "https://www.jugantor.com/")
-        } else if (view.id == R.id.kaler_kantho) {
-            newsIntent.putExtra("NewsURL", "https://www.kalerkantho.com/")
-        } else if (view.id == R.id.inqilab) {
-            newsIntent.putExtra("NewsURL", "https://dailyinqilab.com/")
-        } else if (view.id == R.id.jamuna_tv) {
-            newsIntent.putExtra("NewsURL", "https://jamuna.tv/")
-        } else if (view.id == R.id.cardview_salat_time) {
-            newsIntent.putExtra("NewsURL", "https://raskin.top/") //Daily Salat time Updates
-        }
-        if (view.id == R.id.bd_pratidin || view.id == R.id.karatoa || view.id == R.id.jugantor || view.id == R.id.kaler_kantho || view.id == R.id.inqilab || view.id == R.id.jamuna_tv || view.id == R.id.cardview_salat_time) {
-            startActivity(newsIntent)
-        }
+        newsIntent.putExtra("NewsURL", ""+url)
+        startActivity(newsIntent)
+    }
 
-        //Current Affairs
+    private fun startCurrentAffairsActivity(url: String) {
         val currentAffairsIntent = Intent(activity, CurrentAffairsActivity::class.java)
-        if (view.id == R.id.jan_2025) {
-            currentAffairsIntent.putExtra(
-                "CurrentAffairsURL",
-                "https://drive.google.com/file/d/1Y3nohuH9wgTm22BA3cODHh31usofKv6N/view?usp=sharing"
-            )
-            //    currentAffairsIntent.putExtra("CurrentAffairsAssets", "current_affairs_jan2025.pdf");
-        } else if (view.id == R.id.dec_2024) {
-            currentAffairsIntent.putExtra(
-                "CurrentAffairsURL",
-                "https://drive.google.com/file/d/1NfogCQQ_cSmYlnz7iJG4hEgQqXELokYc/view?usp=sharing"
-            )
-            //    currentAffairsIntent.putExtra("CurrentAffairsAssets", "current_affairs_dec2024.pdf");
-        }
+        currentAffairsIntent.putExtra("CurrentAffairsURL", ""+url)
         startActivity(currentAffairsIntent)
     }
 

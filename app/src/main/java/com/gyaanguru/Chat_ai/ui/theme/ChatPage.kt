@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gyaanguru.Chat_ai.ChatViewModel
@@ -42,7 +43,9 @@ import com.gyaanguru.R
 
 @Composable
 fun ChatPage(modifier: Modifier = Modifier, viewModel: ChatViewModel = ChatViewModel()){
-    Column(modifier = modifier.fillMaxSize().background(LightGreen)) {
+    Column(modifier = modifier
+        .fillMaxSize()
+        .background(LightGreen)) {
         MessageList(modifier = Modifier.weight(1f), messageList = viewModel.messageList)
         MessageInput(onMessageSend = { viewModel.sendMessage(it) })
     }
@@ -86,10 +89,23 @@ fun MessageRow(messageModel: MessageModel){
 @Composable
 fun MessageInput(onMessageSend: (String) -> Unit){
     var message by remember { mutableStateOf("") }
-    Row(modifier = Modifier.padding(8.dp).padding(bottom = 16.dp), verticalAlignment = Alignment.CenterVertically){
-        OutlinedTextField(value = message, onValueChange = {message = it}, modifier = Modifier.weight(1f).background(Color.LightGray), placeholder = { Text("Ask a question?") } )
+    Row(modifier = Modifier
+        .padding(8.dp)
+        .padding(bottom = 16.dp), verticalAlignment = Alignment.CenterVertically){
+        OutlinedTextField(value = message, onValueChange = {message = it}, modifier = Modifier
+            .weight(1f)
+            .background(Color.LightGray), placeholder = { Text("Ask a question?") } )
         IconButton(onClick = { if(message.isNotEmpty()){
             onMessageSend(message)
             message = "" } }) { Icon(imageVector = Icons.Default.Send, tint = Color.Blue, contentDescription = "Send") }
     }
+}
+
+// Preview function
+@Preview(showBackground = true)
+@Composable
+fun ChatPagePreview() {
+    // Create a dummy ViewModel for the preview
+    val viewModel = ChatViewModel()
+    ChatPage(viewModel = viewModel)
 }

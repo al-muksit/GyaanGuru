@@ -19,7 +19,6 @@ import com.gyaanguru.R;
 public class NewsActivity extends AppCompatActivity {
 
     WebView webView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

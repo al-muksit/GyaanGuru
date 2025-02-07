@@ -1,11 +1,8 @@
-@file:Suppress("PackageName")
-
 package com.gyaanguru.Activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -25,6 +22,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.multidex.MultiDex
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
@@ -49,18 +47,18 @@ class MainActivity : AppCompatActivity() {
     private lateinit var firebaseDatabase: FirebaseDatabase
     private lateinit var userRef: DatabaseReference
     private lateinit var bottomMenu: ChipNavigationBar
-    private lateinit var frameLayout: FrameLayout
     private lateinit var profileImage: CircleImageView
     private lateinit var userNameTxt: TextView
+    private lateinit var frameLayout: FrameLayout
+    private lateinit var fragmentManager: FragmentManager
+    private var currentFragment: Fragment? = null
 
-    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.getRoot())
         setSupportActionBar(binding.toolbar)
-        supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this@MainActivity, R.color.navy_blue)))
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v: View, insets: WindowInsetsCompat ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -72,11 +70,10 @@ class MainActivity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
         firebaseDatabase = FirebaseDatabase.getInstance()
         userRef = firebaseDatabase.getReference()
-        bottomMenu = findViewById<ChipNavigationBar>(R.id.bottom_menu)
-        frameLayout = findViewById<FrameLayout>(R.id.fragment_container)
-        frameLayout.setBackgroundColor(Color.parseColor("#C0DCEC"))
-        profileImage = findViewById<CircleImageView>(R.id.profileImage)
-        userNameTxt = findViewById<TextView>(R.id.userNameTxt)
+        bottomMenu = binding.bottomMenu
+        frameLayout = binding.frameLayout
+        profileImage = binding.profileImage
+        userNameTxt = binding.userNameTxt
 
         val window:Window=this@MainActivity.window
         window.statusBarColor=ContextCompat.getColor(this@MainActivity, R.color.navy_blue)
@@ -115,35 +112,74 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        fragmentManager = supportFragmentManager
         binding.apply {
-            bottomMenu.setItemSelected(R.id.bottom_home)
+            bottomMenu.setItemSelected(R.id.bottom_home, true)  // Set initial fragment
             replaceFragment(HomeFragment())
-            bottomMenu.setOnItemSelectedListener {
-                if (it == R.id.bottom_quizzes) {
-                replaceFragment(QuizzesFragment())
-     //           frameLayout.setBackgroundColor(Color.parseColor("#ECE3F0"))
-                supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this@MainActivity, R.color.dark_pink)))
-                window.statusBarColor=ContextCompat.getColor(this@MainActivity, R.color.dark_pink)
+
+// Handle ChipNavigationBar item clicks
+            bottomMenu.setOnItemSelectedListener { id ->
+                when (id) {
+                    R.id.bottom_quizzes -> {
+                        replaceFragment(QuizzesFragment())
+                        supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this@MainActivity, R.color.dark_pink)))
+                        window.statusBarColor = ContextCompat.getColor(this@MainActivity, R.color.dark_pink)
+                    }
+                    R.id.bottom_chatAI -> {
+                        replaceFragment(ChataiFragment())
+                        supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this@MainActivity, R.color.dark_green)))
+                        window.statusBarColor = ContextCompat.getColor(this@MainActivity, R.color.dark_green)
+                    }
+                    R.id.bottom_home -> {
+                        replaceFragment(HomeFragment())
+                        supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this@MainActivity, R.color.navy_blue)))
+                        window.statusBarColor = ContextCompat.getColor(this@MainActivity, R.color.navy_blue)
+                    }
                 }
-                else if (it == R.id.bottom_chatAI) {
-                    replaceFragment(ChataiFragment())
-     //               frameLayout.setBackgroundColor(Color.parseColor("#D1E2C4"))
-                    supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this@MainActivity, R.color.dark_green)))
-                    window.statusBarColor=ContextCompat.getColor(this@MainActivity, R.color.dark_green)
-                }
-                else if (it == R.id.bottom_home) {
-                    replaceFragment(HomeFragment())
-     //               frameLayout.setBackgroundColor(Color.parseColor("#C0DCEC"))
-                    supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this@MainActivity, R.color.navy_blue)))
-                    window.statusBarColor=ContextCompat.getColor(this@MainActivity, R.color.navy_blue)
-                }
-                return@setOnItemSelectedListener
             }
             profileImage.setOnClickListener {
                 val intent: Intent = Intent(this@MainActivity, ProfileActivity::class.java)
                 startActivity(intent)
             }
         }
+
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        val transaction = fragmentManager.beginTransaction()
+
+        // Set custom animations
+        if (currentFragment != null) {
+            if (fragment is HomeFragment && currentFragment is QuizzesFragment) {
+                transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right)
+            }
+            else if (fragment is HomeFragment && currentFragment is ChataiFragment) {
+                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left)
+            }
+            else if (fragment is ChataiFragment && currentFragment is QuizzesFragment) {
+                transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right)
+            }
+            else if (fragment is ChataiFragment && currentFragment is HomeFragment) {
+                transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right)
+            }
+            else if (fragment is QuizzesFragment && currentFragment is HomeFragment) {
+                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left)
+            }
+            else if (fragment is QuizzesFragment && currentFragment is ChataiFragment) {
+                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left)
+            }
+        } else {
+            // Handle the initial transition (currentFragment is null)
+            if (fragment is ChataiFragment) {
+                transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right)
+            } else if (fragment is QuizzesFragment) {
+                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left)
+            }
+        }
+        transaction.replace(R.id.frameLayout, fragment)
+        transaction.commit()
+        currentFragment = fragment
+    //  supportFragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit()
     }
 
     private fun loadProfileImage(imageUrl: String) {
@@ -154,11 +190,7 @@ class MainActivity : AppCompatActivity() {
         // Picasso.get().load(imageUrl).into(profileImageView)
     }
 
-    private fun replaceFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit()
-    }
-
-    //Main Menu
+//Main Menu
     @SuppressLint("RestrictedApi")
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)

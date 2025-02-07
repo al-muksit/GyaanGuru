@@ -8,126 +8,124 @@
     android:background="@color/light_grey"
     tools:context=".Tutorials.ArticleTutorialsActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="50sp"
-        android:layout_alignParentTop="true"
-        android:background="@color/dark_green"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
-
-        <LinearLayout
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="0sp"
-            android:gravity="bottom"
-            android:orientation="horizontal"
-            tools:ignore="UseCompoundDrawables">
+            android:layout_height="50sp"
+            android:layout_alignParentTop="true"
+            android:background="@color/dark_green"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
 
-            <ImageView
-                android:id="@+id/backImageView"
-                android:layout_width="32sp"
-                android:layout_height="32sp"
-                android:onClick="back"
-                android:padding="1sp"
-                app:srcCompat="@drawable/baseline_arrow_back_24"
-                tools:ignore="ContentDescription" />
-
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10sp"
-                android:padding="4sp"
-                android:text="Article Tutorial"
-                android:textColor="@color/grey"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                tools:ignore="HardcodedText" />
-        </LinearLayout>
+                android:layout_gravity="center"
+                android:layout_marginTop="0sp"
+                android:gravity="bottom"
+                android:orientation="horizontal"
+                tools:ignore="UseCompoundDrawables">
 
-    </androidx.appcompat.widget.Toolbar>
+                <ImageView
+                    android:id="@+id/backImageView"
+                    android:layout_width="32sp"
+                    android:layout_height="32sp"
+                    android:padding="1sp"
+                    app:srcCompat="@drawable/baseline_arrow_back_24"
+                    tools:ignore="ContentDescription" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="30sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10sp"
+                    android:padding="4sp"
+                    android:text="Article Tutorial"
+                    android:textColor="@color/grey"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="60sp"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-            <ImageView
-                android:id="@+id/javatpoint"
-                android:layout_width="match_parent"
-                android:layout_height="80sp"
-                android:layout_marginLeft="10sp"
-                android:layout_marginRight="15sp"
-                android:layout_weight="1"
-                android:background="@drawable/white_bg"
-                android:padding="4sp"
-                android:src="@drawable/javatpoint"></ImageView>
-
-            <ImageView
-                android:id="@+id/geeksforgeeks"
-                android:layout_width="match_parent"
-                android:layout_height="80sp"
-                android:layout_marginLeft="15sp"
-                android:layout_marginRight="10sp"
-                android:layout_weight="1"
-                android:background="@drawable/white_bg"
-                android:padding="4sp"
-                android:src="@drawable/geeksforgeeks"></ImageView>
-
-        </LinearLayout>
-
+        </androidx.appcompat.widget.Toolbar>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30sp"
-            android:orientation="horizontal"
-            android:weightSum="2">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="30sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
-            <ImageView
-                android:id="@+id/tutorialspoint"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="80sp"
-                android:layout_marginLeft="10sp"
-                android:layout_marginRight="15sp"
-                android:layout_weight="1"
-                android:background="@drawable/white_bg"
-                android:padding="4sp"
-                android:src="@drawable/tutorials_point"></ImageView>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60sp"
+                android:orientation="horizontal"
+                android:weightSum="2">
 
-            <ImageView
-                android:id="@+id/w3school"
+                <ImageView
+                    android:id="@+id/javatpoint"
+                    android:layout_width="match_parent"
+                    android:layout_height="80sp"
+                    android:layout_marginLeft="10sp"
+                    android:layout_marginRight="15sp"
+                    android:layout_weight="1"
+                    android:background="@drawable/white_bg"
+                    android:padding="4sp"
+                    android:src="@drawable/javatpoint"></ImageView>
+
+                <ImageView
+                    android:id="@+id/geeksforgeeks"
+                    android:layout_width="match_parent"
+                    android:layout_height="80sp"
+                    android:layout_marginLeft="15sp"
+                    android:layout_marginRight="10sp"
+                    android:layout_weight="1"
+                    android:background="@drawable/white_bg"
+                    android:padding="4sp"
+                    android:src="@drawable/geeksforgeeks"></ImageView>
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="80sp"
-                android:layout_marginLeft="15sp"
-                android:layout_marginRight="10sp"
-                android:layout_weight="1"
-                android:background="@drawable/white_bg"
-                android:padding="10sp"
-                android:src="@drawable/w3school"></ImageView>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30sp"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <ImageView
+                    android:id="@+id/tutorialspoint"
+                    android:layout_width="match_parent"
+                    android:layout_height="80sp"
+                    android:layout_marginLeft="10sp"
+                    android:layout_marginRight="15sp"
+                    android:layout_weight="1"
+                    android:background="@drawable/white_bg"
+                    android:padding="4sp"
+                    android:src="@drawable/tutorials_point"></ImageView>
+
+                <ImageView
+                    android:id="@+id/w3school"
+                    android:layout_width="match_parent"
+                    android:layout_height="80sp"
+                    android:layout_marginLeft="15sp"
+                    android:layout_marginRight="10sp"
+                    android:layout_weight="1"
+                    android:background="@drawable/white_bg"
+                    android:padding="10sp"
+                    android:src="@drawable/w3school"></ImageView>
+
+            </LinearLayout>
 
         </LinearLayout>
-
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -75,6 +75,10 @@ public class DailyDetailsActivity extends AppCompatActivity {
 
     private void startSpeech() {
         String text = dailyUpdatesDescription.getText().toString();
+        int maxLength = 700; // Adjust this value as needed
+        if (text.length() > maxLength) {
+            text = text.substring(0, maxLength) + "... (truncated)";
+        }
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
         isSpeaking = true;
     }
@@ -82,7 +86,6 @@ public class DailyDetailsActivity extends AppCompatActivity {
     private void stopSpeech() {
         if (textToSpeech != null && textToSpeech.isSpeaking()) {
             textToSpeech.stop();
-            textToSpeech.shutdown();
             isSpeaking = false;
         }
     }
@@ -90,12 +93,14 @@ public class DailyDetailsActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        stopSpeech();   // Stop the speech when the activity is destroyed
+        stopSpeech();
+        textToSpeech.shutdown();
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        stopSpeech();   // Stop the speech when the back button is pressed
+        stopSpeech();
+        textToSpeech.shutdown();
     }
 }

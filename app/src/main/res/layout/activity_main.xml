@@ -58,15 +58,13 @@
         </androidx.appcompat.widget.Toolbar>
 
         <FrameLayout
-            android:id="@+id/fragment_container"
+            android:id="@+id/frameLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0sp"
             android:background="@color/light_blue"
             android:layout_above="@id/bottom_menu"
             android:layout_below="@id/toolbar"
-            android:orientation="vertical">
-
-        </FrameLayout>
+            android:orientation="vertical"></FrameLayout>
 
 
         <com.ismaeldivita.chipnavigation.ChipNavigationBar
