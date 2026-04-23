@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -23,7 +22,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.multidex.MultiDex;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -44,9 +42,14 @@ import com.gyaanguru.databinding.ActivityProfileBinding;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.IOException;
 import java.util.UUID;
+
+import es.dmoral.toasty.Toasty;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -54,8 +57,6 @@ public class ProfileActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference userRef;
-    TextView userNameTxt, userEmailTxt;
-    CircleImageView profileImage;
     Uri imageUri;
 
     private StorageReference storageReference;
@@ -69,28 +70,28 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         getWindow().setStatusBarColor(getResources().getColor(R.color.top_background));
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        MultiDex.install(this);
         firebaseAuth = FirebaseAuth.getInstance();
+        if (firebaseAuth.getCurrentUser() == null) {
+            Toasty.error(this, "User not logged in", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
         firebaseDatabase = FirebaseDatabase.getInstance();
         userRef = firebaseDatabase.getReference();
 
-        firebaseStorage = FirebaseStorage.getInstance();
+        firebaseStorage = FirebaseStorage.getInstance("gs://gyaanguru-fd16e.appspot.com");
         storageReference = firebaseStorage.getReference();
-
-        profileImage = (CircleImageView) findViewById(R.id.profileImage);
-        userNameTxt = (TextView) findViewById(R.id.userName);
-        userEmailTxt = (TextView) findViewById(R.id.userEmail);
 
         SharedPreferences sharedPreferences = getSharedPreferences("userDetails", Context.MODE_PRIVATE);
         if (sharedPreferences.contains("username") && sharedPreferences.contains("email")){
-            userNameTxt.setText(sharedPreferences.getString("username", ""));
-            userEmailTxt.setText(sharedPreferences.getString("email", ""));
+            binding.userName.setText(sharedPreferences.getString("username", ""));
+            binding.userEmail.setText(sharedPreferences.getString("email", ""));
         }
         // Try to load profile image from SharedPreferences first
         String storedProfileImageUrl = sharedPreferences.getString("profileImageUrl", null);
@@ -100,18 +101,17 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Read the userEmail from the database
         userRef = firebaseDatabase.getReference("Users").child(firebaseAuth.getCurrentUser().getUid());
-    //    userRef.child("profileImageUrl").setValue(imageUri.toString());
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 SharedPreferences.Editor editor = sharedPreferences.edit(); // Initialize editor
 
                 String userName = dataSnapshot.child("userName").getValue(String.class);
-                userNameTxt.setText(userName != null ? userName : "Name notfound");
+                binding.userName.setText(userName != null ? userName : "Name not found");
                 editor.putString("username", userName); // Store username
 
                 String userEmail = dataSnapshot.child("email").getValue(String.class);
-                userEmailTxt.setText(userEmail != null ? userEmail : "Email not found");
+                binding.userEmail.setText(userEmail != null ? userEmail : "Email not found");
                 editor.putString("email", userEmail); // Store email
 
                 String profileImageUrl = dataSnapshot.child("profileImageUrl").getValue(String.class);
@@ -119,7 +119,6 @@ public class ProfileActivity extends AppCompatActivity {
                     loadProfileImage(profileImageUrl);  // Load the image into the CircleImageView using Glide or Picasso
                     editor.putString("profileImageUrl", profileImageUrl);  // Update SharedPreferences with the latest profile image URL
                 }
-            //    editor.commit(); // Save all changes synchronously
                 editor.apply(); // Apply changes asynchronously
             }
 
@@ -132,7 +131,7 @@ public class ProfileActivity extends AppCompatActivity {
         binding.backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(ProfileActivity.this, MainActivity.class));
+                finish();
             }
         });
 
@@ -174,38 +173,46 @@ public class ProfileActivity extends AppCompatActivity {
         // Using Glide:
         Glide.with(this)
                 .load(imageUrl)
-                .into(profileImage);
-        // Or, using Picasso:
-        // Picasso.get().load(imageUrl).into(profileImage);
+                .placeholder(R.drawable.baseline_person_24)
+                .error(R.drawable.baseline_person_24)
+                .into(binding.profileImage);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            imageUri=data.getData();
+            imageUri = data.getData();
             try {
-                Bitmap imageBitmap= MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-                profileImage.setImageBitmap(imageBitmap);
+                // MediaStore.Images.Media.getBitmap is deprecated, but we'll use it for now as it's already here
+                Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                binding.profileImage.setImageBitmap(imageBitmap);
                 upload(imageUri);
-            }catch (Exception e) {
-                e.printStackTrace();
+            } catch (IOException e) {
+                Log.e("ProfileActivity", "Error loading bitmap: " + e.getMessage());
+                Toasty.error(this, "Failed to load image", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(this, "No Image Selected", Toast.LENGTH_SHORT).show();
+            Toasty.info(this, "No Image Selected", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     private void upload(Uri imageUri) {
-        if (imageUri!=null) {
+        if (imageUri != null && firebaseAuth.getCurrentUser() != null) {
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
             progressDialog.setCancelable(false);
             progressDialog.show();
 
-            StorageReference ref = storageReference.child("Users/" + firebaseAuth.getCurrentUser().getUid() + "/Image/" + UUID.randomUUID().toString());
-            ref.putFile(imageUri)
+            // Adding an extension and metadata can sometimes help with 412 errors
+            String fileName = UUID.randomUUID().toString() + ".jpg";
+            StorageReference ref = storageReference.child("Users/" + firebaseAuth.getCurrentUser().getUid() + "/Image/" + fileName);
+
+            StorageMetadata metadata = new StorageMetadata.Builder()
+                    .setContentType("image/jpeg")
+                    .build();
+
+            ref.putFile(imageUri, metadata)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -217,24 +224,29 @@ public class ProfileActivity extends AppCompatActivity {
                                         progressDialog.dismiss();
 
                                         // Store the download URL in the database
-                                        userRef.child("profileImageUrl").setValue(downmainImageuri) // Use download URL
+                                        userRef.child("profileImageUrl").setValue(downmainImageuri)
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void Void) {
-                                                        Toast.makeText(ProfileActivity.this, "Profile picture saved", Toast.LENGTH_SHORT).show();
-                                                        // You can reload the profile image here if needed
+                                                        Toasty.success(ProfileActivity.this, "Profile picture saved", Toast.LENGTH_SHORT).show();
                                                         loadProfileImage(downmainImageuri);
+                                                        
+                                                        // Also update SharedPreferences
+                                                        SharedPreferences sharedPreferences = getSharedPreferences("userDetails", Context.MODE_PRIVATE);
+                                                        sharedPreferences.edit().putString("profileImageUrl", downmainImageuri).apply();
                                                     }
                                                 })
                                                 .addOnFailureListener(new OnFailureListener() {
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {
-                                                        Toast.makeText(ProfileActivity.this, "Failed to save image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                        Log.e("ProfileActivity", "Database error: " + e.getMessage());
+                                                        Toasty.error(ProfileActivity.this, "Failed to save image path: " + e.getMessage(), Toast.LENGTH_LONG).show();
                                                     }
                                                 });
                                     } else {
                                         progressDialog.dismiss();
-                                        Toast.makeText(getApplicationContext(), "Failed to get download", Toast.LENGTH_SHORT).show();
+                                        Log.e("ProfileActivity", "Failed to get download URL");
+                                        Toasty.error(getApplicationContext(), "Failed to get download URL", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
@@ -244,15 +256,33 @@ public class ProfileActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             progressDialog.dismiss();
-                            Toast.makeText(ProfileActivity.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Log.e("ProfileActivity", "Upload failed: " + e.getMessage(), e);
+                            
+                            String errorMessage = e.getMessage();
+                            if (e instanceof StorageException) {
+                                StorageException se = (StorageException) e;
+                                int errorCode = se.getErrorCode();
+                                int httpResultCode = se.getHttpResultCode();
+                                Log.e("ProfileActivity", "Storage Error Code: " + errorCode);
+                                Log.e("ProfileActivity", "HTTP Result Code: " + httpResultCode);
+                                
+                                if (errorCode == StorageException.ERROR_NOT_AUTHORIZED) {
+                                    errorMessage = "Not authorized. Please check your Storage Rules.";
+                                } else if (errorCode == StorageException.ERROR_QUOTA_EXCEEDED) {
+                                    errorMessage = "Storage quota exceeded.";
+                                } else if (httpResultCode == 412) {
+                                    errorMessage = "Precondition failed (412). Check if App Check or Storage is enabled in Console.";
+                                }
+                            }
+                            
+                            Toasty.error(ProfileActivity.this, "Upload failed: " + errorMessage, Toast.LENGTH_LONG).show();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
-                                    .getTotalByteCount());
-                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                            progressDialog.setMessage("Uploaded " + (int) progress + "%");
                         }
                     });
         }

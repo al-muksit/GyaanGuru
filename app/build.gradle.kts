@@ -85,7 +85,7 @@ dependencies {
 
     implementation("com.github.GrenderG:Toasty:1.5.2")
     implementation("com.github.ismaeldivita:chip-navigation-bar:1.4.0")
-    implementation("com.github.smarteist:autoimageslider:1.4.0")
+    implementation("com.github.smarteist:Android-Image-Slider:1.4.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
@@ -95,7 +95,7 @@ dependencies {
     implementation("androidx.multidex:multidex:2.0.1")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("de.hdodenhof:circleimageview:3.1.0")
-    implementation("com.agrawalsuneet.androidlibs:dotsloader:1.4")
+    implementation("com.github.agrawalsuneet:dotloaderspack-android:1.4.2")
     implementation("androidx.gridlayout:gridlayout:1.0.0")
 
     // Navigation Component
