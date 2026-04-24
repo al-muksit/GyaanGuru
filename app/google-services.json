@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "950993981324",
-    "project_id": "gyaanguru-fd16e",
-    "storage_bucket": "gyaanguru-fd16e.appspot.com"
+    "project_number": "630576749498",
+    "project_id": "gyanguru2-3fd43",
+    "storage_bucket": "gyanguru2-3fd43.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:950993981324:android:d935faa4ead55341ded0a9",
+        "mobilesdk_app_id": "1:630576749498:android:f6422e56bfeeb765411b83",
         "android_client_info": {
           "package_name": "com.gyaanguru"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAAV3JouqrdF9m8iJRkGU0kcKBICmFHi5g"
+          "current_key": "AIzaSyB8kmn1W3T-5KWtT_-uTAuJPngjMlzwCk8"
         }
       ],
       "services": {

@@ -8,16 +8,18 @@
     android:background="@color/dark_blue"
     tools:context=".Account_details.SplashActivity">
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageView4"
-        android:layout_width="120sp"
-        android:layout_height="120sp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_marginTop="250dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/app_logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.GyaanGuru.Circle" />
 
     <LinearLayout
         android:id="@+id/linearLayout"

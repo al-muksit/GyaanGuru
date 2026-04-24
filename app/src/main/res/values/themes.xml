@@ -8,4 +8,7 @@
 
     <style name="Theme.GyaanGuru" parent="Base.Theme.GyaanGuru" />
 
+    <style name="ShapeAppearance.GyaanGuru.Circle" parent="">
+        <item name="cornerSize">50%</item>
+    </style>
 </resources>

@@ -40,7 +40,6 @@ import com.gyaanguru.Activities.MainActivity;
 import com.gyaanguru.R;
 import com.gyaanguru.databinding.ActivityProfileBinding;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageMetadata;
@@ -85,7 +84,7 @@ public class ProfileActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         userRef = firebaseDatabase.getReference();
 
-        firebaseStorage = FirebaseStorage.getInstance("gs://gyaanguru-fd16e.appspot.com");
+        firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
 
         SharedPreferences sharedPreferences = getSharedPreferences("userDetails", Context.MODE_PRIVATE);

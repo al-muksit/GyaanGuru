@@ -77,15 +77,19 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/top_background" />
 
-                <de.hdodenhof.circleimageview.CircleImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/profileImage"
-                    android:layout_width="100sp"
-                    android:layout_height="100sp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:scaleType="centerCrop"
                     android:src="@drawable/profile_user"
                     app:layout_constraintBottom_toBottomOf="@+id/imageView3"
                     app:layout_constraintEnd_toEndOf="@+id/imageView3"
                     app:layout_constraintStart_toStartOf="@+id/imageView3"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+                    app:layout_constraintTop_toBottomOf="@+id/imageView3"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.GyaanGuru.Circle"
+                    app:strokeColor="@color/white"
+                    app:strokeWidth="2dp" />
 
                 <TextView
                     android:id="@+id/userName"
