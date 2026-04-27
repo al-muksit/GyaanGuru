@@ -36,9 +36,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.UploadTask;
-import com.gyaanguru.Activities.MainActivity;
 import com.gyaanguru.R;
 import com.gyaanguru.databinding.ActivityProfileBinding;
+import com.gyaanguru.Database.UserDatabaseHelper;
 
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
@@ -57,6 +57,7 @@ public class ProfileActivity extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference userRef;
     Uri imageUri;
+    UserDatabaseHelper dbHelper;
 
     private StorageReference storageReference;
     private FirebaseStorage firebaseStorage;
@@ -86,6 +87,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
+        dbHelper = new UserDatabaseHelper(this);
 
         SharedPreferences sharedPreferences = getSharedPreferences("userDetails", Context.MODE_PRIVATE);
         if (sharedPreferences.contains("username") && sharedPreferences.contains("email")){
@@ -96,6 +98,14 @@ public class ProfileActivity extends AppCompatActivity {
         String storedProfileImageUrl = sharedPreferences.getString("profileImageUrl", null);
         if (storedProfileImageUrl != null) {
             loadProfileImage(storedProfileImageUrl);
+        }
+
+        // Try to load local image path from DB if SharedPreferences is empty or as backup
+        if (firebaseAuth.getCurrentUser() != null) {
+            String localPath = dbHelper.getLocalImagePath(firebaseAuth.getCurrentUser().getUid());
+            if (localPath != null && storedProfileImageUrl == null) {
+                loadProfileImage(localPath);
+            }
         }
 
         // Read the userEmail from the database
@@ -115,8 +125,11 @@ public class ProfileActivity extends AppCompatActivity {
 
                 String profileImageUrl = dataSnapshot.child("profileImageUrl").getValue(String.class);
                 if (profileImageUrl != null) {
-                    loadProfileImage(profileImageUrl);  // Load the image into the CircleImageView using Glide or Picasso
-                    editor.putString("profileImageUrl", profileImageUrl);  // Update SharedPreferences with the latest profile image URL
+                    loadProfileImage(profileImageUrl);  // Load the image
+                    editor.putString("profileImageUrl", profileImageUrl);
+                    // Update DB with the latest info from Firebase
+                    dbHelper.saveUserProfile(firebaseAuth.getCurrentUser().getUid(), userName, userEmail, 
+                            sharedPreferences.getString("localProfileImagePath", null), profileImageUrl);
                 }
                 editor.apply(); // Apply changes asynchronously
             }
@@ -127,43 +140,25 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        binding.backImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        binding.backImageView.setOnClickListener(view -> finish());
 
-        binding.logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new AlertDialog.Builder(ProfileActivity.this)
-                        .setTitle("Logout")
-                        .setMessage("Are you sure you want to logout?").setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        })
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {firebaseAuth.signOut();
-                                Intent intent = new Intent(ProfileActivity.this, SigninActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        })
-                        .create()
-                        .show();
-            }
-        });
+        binding.logout.setOnClickListener(v -> new AlertDialog.Builder(ProfileActivity.this)
+                .setTitle("Logout")
+                .setMessage("Are you sure you want to logout?").setNegativeButton("No", (dialog, which) -> dialog.dismiss())
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    firebaseAuth.signOut();
+                    Intent intent = new Intent(ProfileActivity.this, SigninActivity.class);
+                    startActivity(intent);
+                    finish();
+                })
+                .create()
+                .show());
 
-        binding.profileImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent,"Select an image"),1);
-            }
+        binding.profileImage.setOnClickListener(view -> {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select an image"), 1);
         });
 
     }
@@ -186,6 +181,18 @@ public class ProfileActivity extends AppCompatActivity {
                 // MediaStore.Images.Media.getBitmap is deprecated, but we'll use it for now as it's already here
                 Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
                 binding.profileImage.setImageBitmap(imageBitmap);
+
+                // Save image locally for instant access
+                String localPath = ImageStorageHelper.saveImageToInternalStorage(this, imageBitmap, firebaseAuth.getCurrentUser().getUid());
+                if (localPath != null) {
+                    SharedPreferences sharedPreferences = getSharedPreferences("userDetails", Context.MODE_PRIVATE);
+                    sharedPreferences.edit().putString("localProfileImagePath", localPath).apply();
+                    dbHelper.saveUserProfile(firebaseAuth.getCurrentUser().getUid(),
+                            sharedPreferences.getString("username", ""),
+                            sharedPreferences.getString("email", ""),
+                            localPath, null);
+                }
+
                 upload(imageUri);
             } catch (IOException e) {
                 Log.e("ProfileActivity", "Error loading bitmap: " + e.getMessage());
@@ -230,9 +237,14 @@ public class ProfileActivity extends AppCompatActivity {
                                                         Toasty.success(ProfileActivity.this, "Profile picture saved", Toast.LENGTH_SHORT).show();
                                                         loadProfileImage(downmainImageuri);
                                                         
-                                                        // Also update SharedPreferences
+                                                        // Also update SharedPreferences and Local DB
                                                         SharedPreferences sharedPreferences = getSharedPreferences("userDetails", Context.MODE_PRIVATE);
                                                         sharedPreferences.edit().putString("profileImageUrl", downmainImageuri).apply();
+                                                        dbHelper.saveUserProfile(firebaseAuth.getCurrentUser().getUid(),
+                                                                sharedPreferences.getString("username", ""),
+                                                                sharedPreferences.getString("email", ""),
+                                                                sharedPreferences.getString("localProfileImagePath", null),
+                                                                downmainImageuri);
                                                     }
                                                 })
                                                 .addOnFailureListener(new OnFailureListener() {
@@ -251,31 +263,28 @@ public class ProfileActivity extends AppCompatActivity {
                             });
                         }
                     })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            progressDialog.dismiss();
-                            Log.e("ProfileActivity", "Upload failed: " + e.getMessage(), e);
-                            
-                            String errorMessage = e.getMessage();
-                            if (e instanceof StorageException) {
-                                StorageException se = (StorageException) e;
-                                int errorCode = se.getErrorCode();
-                                int httpResultCode = se.getHttpResultCode();
-                                Log.e("ProfileActivity", "Storage Error Code: " + errorCode);
-                                Log.e("ProfileActivity", "HTTP Result Code: " + httpResultCode);
-                                
-                                if (errorCode == StorageException.ERROR_NOT_AUTHORIZED) {
-                                    errorMessage = "Not authorized. Please check your Storage Rules.";
-                                } else if (errorCode == StorageException.ERROR_QUOTA_EXCEEDED) {
-                                    errorMessage = "Storage quota exceeded.";
-                                } else if (httpResultCode == 412) {
-                                    errorMessage = "Precondition failed (412). Check if App Check or Storage is enabled in Console.";
-                                }
+                    .addOnFailureListener(e -> {
+                        progressDialog.dismiss();
+                        Log.e("ProfileActivity", "Upload failed: " + e.getMessage(), e);
+
+                        String errMsg = e.getMessage();
+                        if (e instanceof StorageException) {
+                            StorageException se = (StorageException) e;
+                            int errorCode = se.getErrorCode();
+                            int httpResultCode = se.getHttpResultCode();
+                            Log.e("ProfileActivity", "Storage Error Code: " + errorCode);
+                            Log.e("ProfileActivity", "HTTP Result Code: " + httpResultCode);
+
+                            if (errorCode == StorageException.ERROR_NOT_AUTHORIZED) {
+                                errMsg = "Not authorized. Please check your Storage Rules.";
+                            } else if (errorCode == StorageException.ERROR_QUOTA_EXCEEDED) {
+                                errMsg = "Storage quota exceeded.";
+                            } else if (httpResultCode == 412) {
+                                errMsg = "Precondition failed (412). Check if App Check or Storage is enabled in Console.";
                             }
-                            
-                            Toasty.error(ProfileActivity.this, "Upload failed: " + errorMessage, Toast.LENGTH_LONG).show();
                         }
+
+                        Toasty.error(ProfileActivity.this, "Upload failed: " + errMsg, Toast.LENGTH_LONG).show();
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                         @Override

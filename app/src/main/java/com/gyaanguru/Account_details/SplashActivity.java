@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.multidex.MultiDex;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.gyaanguru.Activities.MainActivity;
@@ -53,7 +52,6 @@ public class SplashActivity extends AppCompatActivity {
             return insets;
         });
 
-        MultiDex.install(this);
         firebaseAuth = FirebaseAuth.getInstance();
     }
 }

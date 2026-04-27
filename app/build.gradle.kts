@@ -14,7 +14,6 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-        multiDexEnabled = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -25,7 +24,6 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            multiDexEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -92,9 +90,7 @@ dependencies {
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
     implementation("com.squareup.picasso:picasso:2.8")
 
-    implementation("androidx.multidex:multidex:2.0.1")
     implementation("androidx.cardview:cardview:1.0.0")
-    implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("com.github.agrawalsuneet:dotloaderspack-android:1.4.2")
     implementation("androidx.gridlayout:gridlayout:1.0.0")
 
