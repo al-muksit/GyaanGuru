@@ -48,13 +48,15 @@
                     android:text="new Account"></TextView>
             </LinearLayout>
 
-            <de.hdodenhof.circleimageview.CircleImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/imageView"
-                android:layout_width="100sp"
-                android:layout_height="100sp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="50sp"
-                android:src="@drawable/app_logo"/>
+                android:layout_marginTop="50dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/app_logo"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.GyaanGuru.Circle" />
 
             <LinearLayout
                 android:layout_width="match_parent"

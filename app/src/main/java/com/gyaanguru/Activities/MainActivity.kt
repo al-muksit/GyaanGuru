@@ -23,7 +23,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.multidex.MultiDex
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -36,9 +35,10 @@ import com.gyaanguru.Fragments.ChataiFragment
 import com.gyaanguru.Fragments.HomeFragment
 import com.gyaanguru.Fragments.QuizzesFragment
 import com.gyaanguru.R
+import com.gyaanguru.Database.UserDatabaseHelper
 import com.gyaanguru.databinding.ActivityMainBinding
 import com.ismaeldivita.chipnavigation.ChipNavigationBar
-import de.hdodenhof.circleimageview.CircleImageView
+import com.google.android.material.imageview.ShapeableImageView
 
 class MainActivity : AppCompatActivity() {
 
@@ -47,7 +47,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var firebaseDatabase: FirebaseDatabase
     private lateinit var userRef: DatabaseReference
     private lateinit var bottomMenu: ChipNavigationBar
-    private lateinit var profileImage: CircleImageView
+    private lateinit var profileImage: ShapeableImageView
+    private lateinit var dbHelper: UserDatabaseHelper
     private lateinit var userNameTxt: TextView
     private lateinit var frameLayout: FrameLayout
     private lateinit var fragmentManager: FragmentManager
@@ -57,7 +58,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.getRoot())
+        setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v: View, insets: WindowInsetsCompat ->
@@ -66,10 +67,10 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        MultiDex.install(this)
         firebaseAuth = FirebaseAuth.getInstance()
         firebaseDatabase = FirebaseDatabase.getInstance()
         userRef = firebaseDatabase.getReference()
+        dbHelper = UserDatabaseHelper(this)
         bottomMenu = binding.bottomMenu
         frameLayout = binding.frameLayout
         profileImage = binding.profileImage
@@ -82,9 +83,18 @@ class MainActivity : AppCompatActivity() {
         if (sharedPreferences.contains("username") && sharedPreferences.contains("email")) {
             userNameTxt.text = sharedPreferences.getString("username", "")
         }
+
         val storedProfileImageUrl = sharedPreferences.getString("profileImageUrl", null)
-        if (storedProfileImageUrl != null) {
-            loadProfileImage(storedProfileImageUrl) // Load the image from SharedPreferences immediately
+        
+        // Priority 1: Load Local Image Path for INSTANT visibility
+        val localImagePath = sharedPreferences.getString("localProfileImagePath", null)
+        if (localImagePath != null) {
+            loadProfileImage(localImagePath)
+        } else {
+            // Priority 2: Load from URL if local path not found
+            if (storedProfileImageUrl != null) {
+                loadProfileImage(storedProfileImageUrl)
+            }
         }
 
      // Read the username and userEmail from the database
@@ -98,7 +108,7 @@ class MainActivity : AppCompatActivity() {
                 val profileImageUrl = dataSnapshot.child("profileImageUrl").getValue(String::class.java)
                 if (profileImageUrl != null) {  // Check if the image URL has changed
                     if (profileImageUrl != storedProfileImageUrl) {  // Load the new image and update SharedPreferences
-                        loadProfileImage(profileImageUrl)  // Load the image into the CircleImageView
+                        loadProfileImage(profileImageUrl)  // Load the image into the ShapeableImageView
                         with(sharedPreferences.edit()) {
                             putString("profileImageUrl", profileImageUrl)
                             apply()
@@ -138,7 +148,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             profileImage.setOnClickListener {
-                val intent: Intent = Intent(this@MainActivity, ProfileActivity::class.java)
+                val intent = Intent(this@MainActivity, ProfileActivity::class.java)
                 startActivity(intent)
             }
         }
